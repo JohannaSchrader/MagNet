@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# See `man sbatch` or https://slurm.schedmd.com/sbatch.html for descriptions of sbatch options.
+#SBATCH --job-name=MagNet 
+#SBATCH --nodes=1                   
+#SBATCH --cpus-per-task=16          
+#SBATCH --gpus=2                    
+#SBATCH --error=error.err
+#SBATCH --output=output.out
+#SBATCH --time=10-10:10:10
+#SBATCH --partition=ampere
+
+
+module load mamba
+# Activate the environment, you have to create it first
+micromamba activate magnet
+
+# preprocess the data 
+bash preprocess.sh 'data/GSE211692_RAW.tar' 'input' 'data/mapping_file.txt' 
+
+export RAY_memory_monitor_refresh_ms=0
+# # run the model
+python3 -u train.py --comb 2 --baseline OURS
+python3 -u train.py --comb 1 --baseline OURS
+
+# evaluate 
+jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.allow_errors=True evaluation.ipynb 

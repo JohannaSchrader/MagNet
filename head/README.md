@@ -1,0 +1,2 @@
+This code was adapted from the paper *Prediction of tissue-of-origin of early stage cancers using serum miRNomes* by Matsuzaki et al. (doi: 10.1093/jncics/pkac080), Repository at 
+https://github.com/pfnet-research/head_model. 
