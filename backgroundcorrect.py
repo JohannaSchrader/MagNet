@@ -283,17 +283,12 @@ if __name__ == '__main__':
 
     if os.path.exists(mapping_file):
         with open(mapping_file, 'r') as f:
-            # Split each line by the first occurrence of " : "
             file_mapping_dict = {
                 line.split(':')[0].strip(): line.split(':')[1].strip() 
                 for line in f if ':' in line
             }
     v_get = np.vectorize(file_mapping_dict.get)
     ids = v_get(ids)
-
-    # Example usage:
-    # print(file_mapping_dict.get("SH7YM60_Cell1_20180119_1433_1Color_IntegratedResult"))
-    # Output: GSM6483171
 
     df = pd.DataFrame(feature_vectors,columns=feature_names).set_index(ids)
     df = backgroundcorrect(df)
